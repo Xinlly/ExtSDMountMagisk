@@ -1,7 +1,7 @@
-id=mountExtSD
-name=mountExtSD
+id=ExtSDMountMagisk
+name=ExtSDMountMagisk
 version=v1
 versionCode=1
 author=sevcour
-description=挂载SD卡第一分区到/mnt/expandSev
+description=挂载SD卡第一分区到/mnt/ExtSD
 minMagisk=17000
