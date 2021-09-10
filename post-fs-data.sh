@@ -1,9 +1,10 @@
 #!/system/bin/sh
-# 请不要硬编码/magisk/modname/...;相反，请使用$MODDIR/...
-# 这将使您的脚本兼容，即使Magisk以后改变挂载点
-MODDIR=${0%/*}
 
-# 此脚本将在post-fs-data模式下执行
+varPath=${0%/*}
+source ${varPath}/var.
 
-#sdcard
-mount -t ext4 -w /dev/block/mmcblk1p1 /data/adb/00Sev/emulated/0
+echo "WorkDir: ${WorkDir}"
+#mkdir mountRoot
+[ ! -d ${mountRoot} ] && mkdir -p ${mountRoot} && log "[i]" "[Mkdir]" "${mountRoot}" && chown root:sdcard_rw ${mountRoot} && touch ${mountRoot}/.nomedia && chown root:sdcard_rw ${mountRoot}/.nomedia && chmod 0775 ${mountRoot}/.nomedia
+#mount mountPoint
+#[ -d ${mountPoint} ] && mount -t ext4 -w ${mountDevice} ${mountPoint} >> ${logFile} 2>&1 && log "]i]" "[Mount]" "${mountPoint}"
