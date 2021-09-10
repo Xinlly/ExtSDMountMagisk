@@ -1,0 +1,7 @@
+id=mountExtSD
+name=mountExtSD
+version=v1
+versionCode=1
+author=sevcour
+description=挂载SD卡第一分区到/mnt/expandSev
+minMagisk=17000
