@@ -14,7 +14,7 @@ mkBindRoot () {
 	&& chown root:sdcard_rw ${bindRoot}
 	[ ! -f ${bindRoot}/.nomedia ]\
 	&& touch ${bindRoot}/.nomedia
-	
+
 	[ -f ${bindRoot}/.nomedia ]\
 	&& chown root:sdcard_rw ${bindRoot}/.nomedia\
 	&& chmod 0775 ${bindRoot}/.nomedia
@@ -23,17 +23,21 @@ mkBindRoot () {
 	for runtime in ${runtimeSheet[@]}
 	do
 		runtimeLs=${runtime}/${configDirName}
-		[ ! -L ${runtimeLs} ] && ln -sf ${bindRoot} ${runtimeLs} && log "[i]" "[Link]" "${bindRoot} ——→ ${runtimeLs}"
+		[ ! -L ${runtimeLs} ]\
+		&& ln -sf ${bindRoot} ${runtimeLs}\
+		&& log "[i]" "[Link]" "${bindRoot} ——→ ${runtimeLs}"
 	done
 }
 
 mountBindPoint () {
-	[ ! -d ${bindPoint} ] && mkdir -p ${bindPoint} && log "[i]" "[Mkdir]" "${bindPoint}"
-    chown root:sdcard_rw ${bindPoint}
-  fi
-  log "[i]" "[checked]" "${bindPoint}"
-  if ! mount |grep -q ${bindPoint}; then
-		log "[i]" "[Mounting]" "${mountPoint} ——→ ${bindPoint}"
+	[ ! -d ${bindPoint} ]\
+	&& mkdir -p ${bindPoint}\
+	&& log "[i]" "[Mkdir]" "${bindPoint}"
+
+  [ -d ${bindPoint} ]\
+  && chown root:sdcard_rw ${bindPoint}
+
+  if ! mount | grep -q ${bindPoint}; then
 		su -M -c bindfs -u root -g 1015 -p 0775 ${mountDevice} ${bindPoint}
 		log "[i]" "[Mounted]" "${mountPoint} ——→ ${bindPoint}"
 	fi
