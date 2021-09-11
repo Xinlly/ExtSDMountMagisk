@@ -1,60 +1,43 @@
 #!/system/bin/sh
 
-MODDIR=${0%/*}
-runtimeR=/mnt/runtime/read
-runtimeW=/mnt/runtime/write
-runtimeD=/mnt/runtime/default
-runtimeSheet=(${runtimeR} ${runtimeW} ${runtimeD})
-DATA_MEDIA=/data/media
-profile=0
-mountDevice=/dev/block/mmcblk1p1
-mountRootName=ExtSD
-mountRoot=/data/adb/${mountRootName}
-mountPoint=${mountRoot}/${profile}
+varPath=${0%/*}
+source ${varPath}/var.sh
 
-log(){
-	echo "[${1}] $(date "+%Y/%m/%d %H:%M:%S") ${2}\t\t${3}" >>${mountRoot}/ExtSDMount.log 2>&1
-}
+log "[i]" "[Start]" ""
 
-log "i" "[Start]" ""
+mkBindRoot () {
+	[ ! -d ${bindRoot} ]\
+	&& mkdir -p ${bindRoot} && \
+	log "[i]" "[Mkdir]" "${bindRoot}"
 
-mkRoot () {
-	log "i" "[checking]" "${mountRoot}"
-	if [[ ! -d ${mountRoot} ]]; then
-		mkdir -p ${mountRoot}
-		chown root:sdcard_rw ${mountRoot}
-		touch ${mountRoot}/.nomedia
-		chown root:sdcard_rw ${mountRoot}/.nomedia
-		chmod 0775 ${mountRoot}/.nomedia
-	fi
-	log "i" "[checked]" "${mountRoot}"
+	[ -d ${bindRoot} ]\
+	&& chown root:sdcard_rw ${bindRoot}
+	[ ! -f ${bindRoot}/.nomedia ]\
+	&& touch ${bindRoot}/.nomedia
+	
+	[ -f ${bindRoot}/.nomedia ]\
+	&& chown root:sdcard_rw ${bindRoot}/.nomedia\
+	&& chmod 0775 ${bindRoot}/.nomedia
+
+	log "[i]" "[checked]" "${bindRoot}"
 	for runtime in ${runtimeSheet[@]}
 	do
-		runtimeLs=${runtime}/${mountRootName}
-		if [[ ! -L ${runtimeLs} ]]; then
-			ln -sf ${mountRoot} ${runtimeLs}
-			log "i" "[linked]" "${mountRoot} ——→ ${runtimeLs}"
-	  	fi
+		runtimeLs=${runtime}/${configDirName}
+		[ ! -L ${runtimeLs} ] && ln -sf ${bindRoot} ${runtimeLs} && log "[i]" "[Link]" "${bindRoot} ——→ ${runtimeLs}"
 	done
 }
 
-mountRoot () {
-	log "i" "[checking]" "${mountPoint}"
-	if [[ ! -d ${mountPoint} ]]; then
-		log "i" "[making]" "${mountPoint}"
-    mkdir -p ${mountPoint}
-    log "i" "[made]" "${mountPoint}"
-    chown root:sdcard_rw ${mountPoint}
+mountBindPoint () {
+	[ ! -d ${bindPoint} ] && mkdir -p ${bindPoint} && log "[i]" "[Mkdir]" "${bindPoint}"
+    chown root:sdcard_rw ${bindPoint}
   fi
-    log "i" "[checked]" "${mountPoint}"
-    if ! mount |grep -q ${mountPoint}; then
-	  log "i" "[Mounting]" "${mountDevice} ——→ ${mountPoint}"
-		su -M -c bindfs -u root -g 1015 -p 0775 ${mountDevice} ${mountPoint}
-		log "i" "[Mounted]" "${mountDevice} ——→ ${mountPoint}"
+  log "[i]" "[checked]" "${bindPoint}"
+  if ! mount |grep -q ${bindPoint}; then
+		log "[i]" "[Mounting]" "${mountPoint} ——→ ${bindPoint}"
+		su -M -c bindfs -u root -g 1015 -p 0775 ${mountDevice} ${bindPoint}
+		log "[i]" "[Mounted]" "${mountPoint} ——→ ${bindPoint}"
 	fi
 }
 
-mkRoot
-mountRoot
-
-log "i" "[Done]" ""
+log "[i]" "[Done]" ""
+exit

@@ -1,3 +1,5 @@
+#!/system/bin/sh
+
 WorkDir=${0%/*}
 runtimeR=/mnt/runtime/read
 runtimeW=/mnt/runtime/write
@@ -6,9 +8,11 @@ runtimeSheet=(${runtimeR} ${runtimeW} ${runtimeD})
 DATA_MEDIA=/data/media
 profile=0
 mountDevice=/dev/block/mmcblk1p1
-mountRootName=ExtSD
-mountRoot=/data/adb/${mountRootName}
+configDirName=ExtSD
+mountRoot=/data/adb/${configDirName}
 mountPoint=${mountRoot}/${profile}
+bindRoot=/mnt/${configDirName}
+bindPoint=${bindRoot}/${profile}
 logFile=${mountRoot}/ExtSDMount.log
 
 log(){
