@@ -1,2 +1,2 @@
 # sdMountMagisk
-test
+main
