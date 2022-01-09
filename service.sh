@@ -1,5 +1,5 @@
 #!/system/bin/sh
-echo "preLogin" > /data/adb/00Sev/sdBind/preLogin.log
+#echo "preLogin" > /data/adb/00Sev/sdBind/preLogin.log
 WorkDir=${0%/*}
 #source ${varPath}/var.sh
 
@@ -22,7 +22,7 @@ wait_until_login()
 
 
 wait_until_login
-echo "Login" > /data/adb/00Sev/sdBind/Login.log
+#echo "Login" > /data/adb/00Sev/sdBind/Login.log
 su -M -c sh ${WorkDir}/sdBind.sh #> /data/adb/00Sev/sdBind/start.log
-echo "Start" >> /data/adb/00Sev/sdBind/start.log
+#echo "Start" >> /data/adb/00Sev/sdBind/start.log
 exit 0

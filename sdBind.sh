@@ -124,7 +124,6 @@ sdBinder () {
 	done
 }
 
-cat /dev/null > ${logFile}
 log "i" "[Start]" ""
 sdUnbinder
 mkRoot
